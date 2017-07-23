@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <thread>
 #include "Job.h"
 
 namespace fjs
@@ -7,6 +8,24 @@ namespace fjs
 	class Thread;
 	struct TLS;
 	class Fiber;
+
+	struct ManagerOptions
+	{
+		ManagerOptions() :
+			NumThreads(std::thread::hardware_concurrency())
+		{}
+		~ManagerOptions() = default;
+
+		// Threads & Fibers
+		uint8_t NumThreads;						// Amount of Worker Threads, default = amount of Cores
+		uint16_t NumFibers = 25;				// Amount of Fibers
+		// TODO: Add process affinity
+
+		// Worker Queue Sizes
+		size_t HighPriorityQueueSize   = 512;	// High Priority
+		size_t NormalPriorityQueueSize = 2048;	// Normal Priority
+		size_t LowPriorityQueueSize    = 4096;	// Low Priority
+	};
 
 	class Manager
 	{
@@ -60,7 +79,7 @@ namespace fjs
 		static void FiberCallback_Main(fjs::Fiber*);
 
 	public:
-		Manager(uint8_t numThreads, uint16_t numFibers);
+		Manager(const ManagerOptions&);
 		~Manager();
 
 		// Initialize & Run Manager

@@ -15,7 +15,16 @@ void main_test(fjs::Manager* mgr)
 
 int main()
 {
-	fjs::Manager manager(0, 20);
+	// Setup Job Manager
+	fjs::ManagerOptions managerOptions;
+	managerOptions.NumFibers = managerOptions.NumThreads * 10;
+	
+	managerOptions.HighPriorityQueueSize = 128;
+	managerOptions.NormalPriorityQueueSize = 256;
+	managerOptions.LowPriorityQueueSize = 256;
+
+	// Manager
+	fjs::Manager manager(managerOptions);
 	if (manager.Run(main_test) != fjs::Manager::ReturnCode::Succes)
 		std::cout << "oh no" << std::endl;
 	else

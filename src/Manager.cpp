@@ -3,11 +3,12 @@
 #include <fjs/Fiber.h>
 #include <thread>
 
-fjs::Manager::Manager(uint8_t numThreads, uint16_t numFibers) :
-	m_numThreads(numThreads), m_numFibers(numFibers),
-	m_highPriorityQueue(512),
-	m_normalPriorityQueue(2048),
-	m_lowPriorityQueue(4096)
+fjs::Manager::Manager(const ManagerOptions& options) :
+	m_numThreads(options.NumThreads),
+	m_numFibers(options.NumFibers),
+	m_highPriorityQueue(options.HighPriorityQueueSize),
+	m_normalPriorityQueue(options.NormalPriorityQueueSize),
+	m_lowPriorityQueue(options.LowPriorityQueueSize)
 {}
 
 fjs::Manager::~Manager()
@@ -21,9 +22,6 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 		return ReturnCode::AlreadyInitialized;
 
 	// Threads
-	if (m_numThreads == 0)
-		m_numThreads = std::thread::hardware_concurrency();
-
 	m_threads = new Thread[m_numThreads];
 
 	// Current (Main) Thread
