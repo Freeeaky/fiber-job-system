@@ -46,6 +46,25 @@ When requesting a Job to be executed, you need to create a JobInfo instance with
 JobInfo(Job* job, void* userdata = nulltpr, Counter* counter = nullptr);
 JobInfo(Callback_t callback, void* userdata = nullptr, Counter* counter = nullptr);
 ```
+
+### Scheduling Jobs
+```c++
+void main_test(fjs::Manager* mgr)
+{
+	int x = 999;
+	mgr->ScheduleJob(fjs::JobPriority::Normal, fjs::JobInfo(job_increment_number, &x));
+}
+```
+### JobPriority
+```c++
+enum class JobPriority : uint8_t
+{
+	High,		// Jobs are executed ASAP
+	Normal,
+	Low
+};
+```
+
 ## Advanced Usage
 ### Creating a fjs::Manager
 You can configure your *fjs::Manager* object by passing a *fjs::ManagerOptions* instance to the constructor. Although it is disabled by default, I recommend enabling *ThreadAffinity* to lock each Worker Thread to a Queue. For more information, read http://eli.thegreenplace.net/2016/c11-threads-affinity-and-hyperthreading/
@@ -112,5 +131,31 @@ void main_test(fjs::Manager* mgr)
 	
 	queue.Step(); // execute first
 	queue.Execute(); // execute remaining
+}
+```
+
+### fjs::Job
+For the definition of *fjs::Job*, take a look at the section **Job Callbacks** (above). By inheriting from this struct, you can easily manage big jobs.
+```c++
+struct job_increment_number : fjs::Job
+{
+	int* m_ptr;
+
+	job_increment_number(int* ptr) :
+		m_ptr(ptr)
+	{}
+
+	virtual void Execute(void*) override
+	{
+		(*m_ptr)++;
+	}
+};
+
+void main_test(fjs::Manager* mgr)
+{
+	int x = 999;
+	job_increment_number inc(&x);
+
+	mgr->WaitForSingle(fjs::JobPriority::Normal, fjs::JobInfo(&inc));
 }
 ```
