@@ -41,6 +41,13 @@ namespace fjs
 		// Fiber
 		uint16_t FindFreeFiber();
 
+	private:
+		Main_t m_mainCallback = nullptr;
+
+		static void ThreadCallback_Worker(fjs::Thread*);
+		static void FiberCallback_Worker(fjs::Fiber*);
+		static void FiberCallback_Main(fjs::Fiber*);
+
 	public:
 		Manager(uint8_t numThreads, uint16_t numFibers);
 		~Manager();

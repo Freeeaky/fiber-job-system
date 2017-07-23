@@ -32,23 +32,25 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 
 	m_fibers = new Fiber[m_numFibers];
 	for (uint16_t i = 0; i < m_numFibers; i++)
-		m_fibers[i].Reset(nullptr); // TODO callback
+		m_fibers[i].Reset(FiberCallback_Worker);
 
 	// Spawn Threads
 	for (uint8_t i = 1; i < m_numThreads; i++) // offset 1 because 0 is current thread
 	{
-		if (!m_threads[i].Spawn(nullptr))
+		if (!m_threads[i].Spawn(ThreadCallback_Worker))
 			return ReturnCode::OSError;
 	}
 
 	// Main
 	if (main == nullptr)
 		return ReturnCode::NullCallback;
+
+	m_mainCallback = main;
 	
 	// Setup main Fiber
 	mainThreadTLS->CurrentFiberIndex = FindFreeFiber();
 	auto mainFiber = &m_fibers[mainThreadTLS->CurrentFiberIndex];
-	mainFiber->Reset(nullptr); // TODO callback
+	mainFiber->Reset(FiberCallback_Main);
 	
 	mainThreadTLS->ThreadFiber.SwitchTo(mainFiber);
 	
