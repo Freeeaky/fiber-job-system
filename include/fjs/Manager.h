@@ -20,7 +20,7 @@ namespace fjs
 		// Threads & Fibers
 		uint8_t NumThreads;						// Amount of Worker Threads, default = amount of Cores
 		uint16_t NumFibers = 25;				// Amount of Fibers
-		// TODO: Add process affinity
+		bool ThreadAffinity = false;			// Lock each Thread to a processor core, requires NumThreads == amount of cores
 
 		// Worker Queue Sizes
 		size_t HighPriorityQueueSize   = 512;	// High Priority
@@ -43,6 +43,7 @@ namespace fjs
 
 			AlreadyInitialized,		// Manager has already initialized
 			InvalidNumFibers,		// Fiber count is 0 or too high
+			ErrorThreadAffinity,	// ThreadAffinity is enabled, but Worker Thread Count > Available Cores
 		};
 
 		using Main_t = void(*)(Manager*);
@@ -53,6 +54,7 @@ namespace fjs
 		// Threads
 		uint8_t m_numThreads;
 		Thread* m_threads = nullptr;
+		bool m_threadAffinity = false;
 
 		// Fibers
 		uint16_t m_numFibers;

@@ -8,6 +8,10 @@ void fjs::Manager::ThreadCallback_Worker(fjs::Thread* thread)
 	auto manager = reinterpret_cast<fjs::Manager*>(thread->GetUserdata());
 	auto tls = thread->GetTLS();
 
+	// Thread Affinity
+	if (tls->SetAffinity)
+		thread->SetAffinity(tls->ThreadIndex);
+
 	// Setup Thread Fiber
 	tls->ThreadFiber.FromCurrentThread();
 

@@ -28,6 +28,7 @@ int main()
 	// Setup Job Manager
 	fjs::ManagerOptions managerOptions;
 	managerOptions.NumFibers = managerOptions.NumThreads * 10;
+	managerOptions.ThreadAffinity = true;
 	
 	managerOptions.HighPriorityQueueSize = 128;
 	managerOptions.NormalPriorityQueueSize = 256;

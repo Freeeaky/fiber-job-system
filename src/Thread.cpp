@@ -26,6 +26,17 @@ bool fjs::Thread::Spawn(Callback_t callback, void* userdata)
 	return HasSpawned();
 }
 
+void fjs::Thread::SetAffinity(size_t i)
+{
+#ifdef _WIN32
+	if (!HasSpawned())
+		return;
+
+	DWORD_PTR mask = 1ull << i;
+	SetThreadAffinityMask(m_handle, mask);
+#endif
+}
+
 void fjs::Thread::Join()
 {
 	if (!HasSpawned())

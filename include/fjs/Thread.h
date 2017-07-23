@@ -32,6 +32,7 @@ namespace fjs
 
 		// Spawns Thread with given Callback & Userdata
 		bool Spawn(Callback_t callback, void* userdata = nullptr);
+		void SetAffinity(size_t);
 
 		// Waits for Thread
 		void Join();

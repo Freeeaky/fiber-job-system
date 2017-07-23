@@ -18,6 +18,10 @@ namespace fjs
 		TLS() = default;
 		~TLS() = default;
 
+		// Thread Index
+		uint8_t ThreadIndex = UINT8_MAX;
+		bool SetAffinity = false;
+
 		// Thread Fiber
 		Fiber ThreadFiber;
 

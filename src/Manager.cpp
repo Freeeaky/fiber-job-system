@@ -5,6 +5,7 @@
 
 fjs::Manager::Manager(const ManagerOptions& options) :
 	m_numThreads(options.NumThreads),
+	m_threadAffinity(options.ThreadAffinity),
 	m_numFibers(options.NumFibers),
 	m_highPriorityQueue(options.HighPriorityQueueSize),
 	m_normalPriorityQueue(options.NormalPriorityQueueSize),
@@ -45,11 +46,23 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 		m_idleFibers[i].store(true, std::memory_order_relaxed);
 	}
 
+	// Thread Affinity
+	if (m_threadAffinity && m_numThreads > std::thread::hardware_concurrency())
+		return ReturnCode::ErrorThreadAffinity;
+
 	// Spawn Threads
-	for (uint8_t i = 1; i < m_numThreads; i++) // offset 1 because 0 is current thread
+	for (uint8_t i = 0; i < m_numThreads; i++)
 	{
-		if (!m_threads[i].Spawn(ThreadCallback_Worker, this))
-			return ReturnCode::OSError;
+		auto ttls = m_threads[i].GetTLS();
+		ttls->ThreadIndex = i;
+
+		if (i > 0) // 0 is Main Thread
+		{
+			ttls->SetAffinity = m_threadAffinity;
+
+			if (!m_threads[i].Spawn(ThreadCallback_Worker, this))
+				return ReturnCode::OSError;
+		}
 	}
 
 	// Main
