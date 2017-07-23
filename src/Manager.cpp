@@ -39,15 +39,20 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 		return ReturnCode::InvalidNumFibers;
 
 	m_fibers = new Fiber[m_numFibers];
+	m_idleFibers = new std::atomic_bool[m_numFibers];
+
 	for (uint16_t i = 0; i < m_numFibers; i++)
+	{
 		m_fibers[i].Reset(FiberCallback_Worker);
+		m_idleFibers[i].store(true, std::memory_order_relaxed);
+	}
 
 	// Spawn Threads
-	/*for (uint8_t i = 1; i < m_numThreads; i++) // offset 1 because 0 is current thread
+	for (uint8_t i = 1; i < m_numThreads; i++) // offset 1 because 0 is current thread
 	{
-		if (!m_threads[i].Spawn(ThreadCallback_Worker))
+		if (!m_threads[i].Spawn(ThreadCallback_Worker, this))
 			return ReturnCode::OSError;
-	}*/
+	}
 
 	// Main
 	if (main == nullptr)
@@ -59,8 +64,11 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 	mainThreadTLS->CurrentFiberIndex = FindFreeFiber();
 	auto mainFiber = &m_fibers[mainThreadTLS->CurrentFiberIndex];
 	mainFiber->Reset(FiberCallback_Main);
-	
+
 	mainThreadTLS->ThreadFiber.SwitchTo(mainFiber, this);
+
+	for (uint8_t i = 1; i < m_numThreads; i++)
+		m_threads[i].Join();
 	
 	// Done
 	return ReturnCode::Succes;
@@ -68,6 +76,20 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 
 uint16_t fjs::Manager::FindFreeFiber()
 {
-	// TODO
-	return 0;
+	while (true)
+	{
+		for (uint16_t i = 0; i < m_numFibers; i++)
+		{
+			if (!m_idleFibers[i].load(std::memory_order_relaxed) ||
+				!m_idleFibers[i].load(std::memory_order_acquire))
+				continue;
+
+			bool expected = true;
+			if (std::atomic_compare_exchange_weak_explicit(&m_idleFibers[i], &expected, false, std::memory_order_release, std::memory_order_relaxed)) {
+				return i;
+			}
+		}
+
+		// TODO: Add Debug Counter and error message
+	}
 }

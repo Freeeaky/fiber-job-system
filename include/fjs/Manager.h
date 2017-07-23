@@ -34,14 +34,14 @@ namespace fjs
 		// Fibers
 		uint16_t m_numFibers;
 		Fiber* m_fibers = nullptr;
+		std::atomic_bool* m_idleFibers = nullptr;
+
+		uint16_t FindFreeFiber();
 
 		// Thread
 		uint8_t GetCurrentThreadIndex() const;
 		Thread* GetCurrentThread() const;
 		TLS* GetCurrentTLS() const;
-
-		// Fiber
-		uint16_t FindFreeFiber();
 
 		// Work Queue
 		Queue<Job> m_highPriorityQueue;

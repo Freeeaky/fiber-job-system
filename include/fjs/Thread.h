@@ -33,11 +33,15 @@ namespace fjs
 		// Spawns Thread with given Callback & Userdata
 		bool Spawn(Callback_t callback, void* userdata = nullptr);
 
+		// Waits for Thread
+		void Join();
+
 		// Takes handle & id from currently running Thread
 		void FromCurrentThread();
 
 		// Getter
 		inline TLS* GetTLS() { return &m_tls; };
+		inline Callback_t GetCallback() const { return m_callback; };
 		inline void* GetUserdata() const { return m_userdata; };
 		inline bool HasSpawned() const { return m_id != UINT32_MAX; };
 		inline const uint32_t GetID() const { return m_id; };

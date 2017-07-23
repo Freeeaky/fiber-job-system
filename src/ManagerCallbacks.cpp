@@ -6,9 +6,15 @@ void fjs::Manager::ThreadCallback_Worker(fjs::Thread* thread)
 {
 	auto manager = reinterpret_cast<fjs::Manager*>(thread->GetUserdata());
 	auto tls = thread->GetTLS();
-	
-	//auto fiber = &manager->m_fibers[tls->CurrentFiberIndex];
-	//tls->ThreadFiber.SwitchTo(fiber);
+
+	// Setup Thread Fiber
+	tls->ThreadFiber.FromCurrentThread();
+
+	// Fiber
+	tls->CurrentFiberIndex = manager->FindFreeFiber();
+
+	auto fiber = &manager->m_fibers[tls->CurrentFiberIndex];
+	tls->ThreadFiber.SwitchTo(fiber, manager);
 }
 
 void fjs::Manager::FiberCallback_Main(fjs::Fiber* fiber)

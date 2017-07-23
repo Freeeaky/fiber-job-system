@@ -1,4 +1,5 @@
 #include <fjs/Manager.h>
+#include <iostream>
 #include <Windows.h>
 
 void main_test(fjs::Manager* mgr)
@@ -9,9 +10,11 @@ void main_test(fjs::Manager* mgr)
 
 int main()
 {
-	MessageBox(0, 0, 0, 0);
 	fjs::Manager manager(0, 20);
-	auto err = manager.Run(main_test);
+	if (manager.Run(main_test) != fjs::Manager::ReturnCode::Succes)
+		std::cout << "oh no" << std::endl;
+	else
+		std::cout << "done" << std::endl;
 
 	return 0;
 }
