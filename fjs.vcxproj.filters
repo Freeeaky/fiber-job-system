@@ -31,5 +31,8 @@
     <ClCompile Include="src\Thread.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="src\Fiber.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

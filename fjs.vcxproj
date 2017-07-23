@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Fiber.cpp" />
     <ClCompile Include="src\Manager.cpp" />
     <ClCompile Include="src\Thread.cpp" />
   </ItemGroup>

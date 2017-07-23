@@ -19,11 +19,11 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 	m_threads = new Thread[m_numThreads];
 
 	// Current (Main) Thread
-	m_threads[0] = CurrentThread();
+	m_threads[0].FromCurrentThread();
 
 	auto mainThread = &m_threads[0];
 	auto mainThreadTLS = mainThread->GetTLS();
-	mainThreadTLS->ThreadFiber = Thread::ConvertToFiber();
+	mainThreadTLS->ThreadFiber = Fiber::ConvertCurrentThread();
 
 	// Create Fibers
 	// This has to be done after Thread is converted to Fiber!
@@ -36,7 +36,10 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 
 	// Spawn Threads
 	for (uint8_t i = 1; i < m_numThreads; i++) // offset 1 because 0 is current thread
-		m_threads[i].Spawn(nullptr); // TODO callback
+	{
+		if (!m_threads[i].Spawn(nullptr))
+			return ReturnCode::OSError;
+	}
 
 	// Main
 	if (main == nullptr)

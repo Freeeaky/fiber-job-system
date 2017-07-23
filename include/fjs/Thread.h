@@ -4,34 +4,42 @@
 
 namespace fjs
 {
-	struct Fiber;
+	class Fiber;
 
 	class Thread
 	{
-	protected:
+	public:
+		using Callback_t = void(*)(Thread*);
+
+	private:
 		void* m_handle = nullptr;
 		uint32_t m_id = UINT32_MAX;
 		TLS m_tls;
 
+		Callback_t m_callback = nullptr;
+		void* m_userdata = nullptr;
+
+		// Constructor for CurrentThread
+		// Required since Thread cannot be copied
+		Thread(void* h, uint32_t id) :
+			m_handle(h), m_id(id)
+		{};
+
 	public:
 		Thread() = default;
 		Thread(const Thread&) = delete;
-		virtual ~Thread();
+		virtual ~Thread() = default; // Note: destructor does not despawn Thread
 
-		bool Spawn(void* callback);
+		// Spawns Thread with given Callback & Userdata
+		bool Spawn(Callback_t callback, void* userdata = nullptr);
 
+		// Takes handle & id from currently running Thread
+		void FromCurrentThread();
+
+		// Getter
 		inline TLS* GetTLS() { return &m_tls; };
+		inline void* GetUserdata() const { return m_userdata; };
 		inline bool HasSpawned() const { return m_id != UINT32_MAX; };
 		inline const uint32_t GetID() const { return m_id; };
-
-		// Convert To Fiber
-		// Converts current Thread to a Fiber
-		static Fiber ConvertToFiber();
-	};
-
-	struct CurrentThread : Thread
-	{
-		CurrentThread();
-		virtual ~CurrentThread() = default;
 	};
 }
