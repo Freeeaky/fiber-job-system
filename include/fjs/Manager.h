@@ -1,5 +1,7 @@
 #pragma once
 #include <stdint.h>
+#include "Queue.h"
+#include "Job.h"
 
 namespace fjs
 {
@@ -40,6 +42,11 @@ namespace fjs
 
 		// Fiber
 		uint16_t FindFreeFiber();
+
+		// Work Queue
+		Queue<Job> m_highPriorityQueue;
+		Queue<Job> m_normalPriorityQueue;
+		Queue<Job> m_lowPriorityQueue;
 
 	private:
 		Main_t m_mainCallback = nullptr;

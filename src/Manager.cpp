@@ -4,7 +4,10 @@
 #include <thread>
 
 fjs::Manager::Manager(uint8_t numThreads, uint16_t numFibers) :
-	m_numThreads(numThreads), m_numFibers(numFibers)
+	m_numThreads(numThreads), m_numFibers(numFibers),
+	m_highPriorityQueue(16),
+	m_normalPriorityQueue(32),
+	m_lowPriorityQueue(32)
 {}
 
 fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)

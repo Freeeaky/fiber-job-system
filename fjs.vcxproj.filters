@@ -23,6 +23,12 @@
     <ClInclude Include="include\fjs\Fiber.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="include\fjs\Queue.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fjs\Job.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Manager.cpp">
@@ -32,6 +38,12 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="src\Fiber.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ManagerCallbacks.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ManagerThreads.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
