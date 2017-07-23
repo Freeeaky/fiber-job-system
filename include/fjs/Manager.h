@@ -1,6 +1,5 @@
 #pragma once
 #include <stdint.h>
-#include "Queue.h"
 #include "Job.h"
 
 namespace fjs
@@ -46,9 +45,12 @@ namespace fjs
 		TLS* GetCurrentTLS() const;
 
 		// Work Queue
-		Queue<Job> m_highPriorityQueue;
-		Queue<Job> m_normalPriorityQueue;
-		Queue<Job> m_lowPriorityQueue;
+		JobQueue m_highPriorityQueue;
+		JobQueue m_normalPriorityQueue;
+		JobQueue m_lowPriorityQueue;
+
+		JobQueue* GetQueueByPriority(JobPriority);
+		bool GetNextJob(Job&);
 
 	private:
 		Main_t m_mainCallback = nullptr;
@@ -68,6 +70,10 @@ namespace fjs
 		// blocking => wait for threads to exit
 		void Shutdown(bool blocking);
 
+		// Jobs
+		void ScheduleJob(JobPriority, const Job&);
+
+		// Getter
 		inline bool IsShuttingDown() const { return m_shuttingDown.load(std::memory_order_acquire); };
 		const uint8_t GetNumThreads() const { return m_numThreads; };
 		const uint16_t GetNumFibers() const { return m_numFibers; };

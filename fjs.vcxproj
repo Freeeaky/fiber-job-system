@@ -137,6 +137,7 @@
     <ClCompile Include="src\Fiber.cpp" />
     <ClCompile Include="src\Manager.cpp" />
     <ClCompile Include="src\ManagerCallbacks.cpp" />
+    <ClCompile Include="src\ManagerJobs.cpp" />
     <ClCompile Include="src\ManagerThreads.cpp" />
     <ClCompile Include="src\Thread.cpp" />
   </ItemGroup>

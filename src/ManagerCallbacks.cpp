@@ -35,10 +35,14 @@ void fjs::Manager::FiberCallback_Worker(fjs::Fiber* fiber)
 {
 	auto manager = reinterpret_cast<fjs::Manager*>(fiber->GetUserdata());
 
+	Job job;
+
 	while (!manager->IsShuttingDown())
 	{
 		auto tls = manager->GetCurrentTLS();
-
+		
+		if (manager->GetNextJob(job))
+			job.callback(job.userdata);
 
 		Thread::Sleep(1);
 	}

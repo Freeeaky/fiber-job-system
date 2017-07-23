@@ -46,5 +46,8 @@
     <ClCompile Include="src\ManagerThreads.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="src\ManagerJobs.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
