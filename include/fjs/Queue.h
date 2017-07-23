@@ -21,8 +21,8 @@ namespace fjs
 		~Queue();
 
 		// Add
-		void Add(JobPriority, JobInfo&);
-		Queue& operator+=(JobInfo&);
+		void Add(JobPriority, JobInfo);
+		Queue& operator+=(const JobInfo&);
 
 		// Execute all Jobs in Queue
 		void Execute();

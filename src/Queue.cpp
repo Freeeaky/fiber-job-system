@@ -10,13 +10,13 @@ fjs::Queue::Queue(fjs::Manager* mgr, JobPriority defaultPriority) :
 fjs::Queue::~Queue()
 {}
 
-void fjs::Queue::Add(JobPriority prio, JobInfo& job)
+void fjs::Queue::Add(JobPriority prio, JobInfo job)
 {
 	job.m_counter = &m_counter;
 	m_queue.emplace_back(prio, job);
 }
 
-fjs::Queue& fjs::Queue::operator+=(JobInfo& job)
+fjs::Queue& fjs::Queue::operator+=(const JobInfo& job)
 {
 	Add(m_defaultPriority, job);
 	return *this;

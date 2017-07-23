@@ -101,3 +101,12 @@ void fjs::Manager::WaitForCounter(Counter* counter, uint32_t targetValue)
 	// Cleanup
 	CleanupPreviousFiber();
 }
+
+void fjs::Manager::WaitForSingle(JobPriority prio, JobInfo info)
+{
+	fjs::Counter ctr(this);
+	info.m_counter = &ctr;
+
+	ScheduleJob(prio, info);
+	WaitForCounter(&ctr);
+}

@@ -100,6 +100,7 @@ namespace fjs
 
 		// Counter
 		void WaitForCounter(Counter*, uint32_t = 0);
+		void WaitForSingle(JobPriority, JobInfo);
 
 		// Getter
 		inline bool IsShuttingDown() const { return m_shuttingDown.load(std::memory_order_acquire); };

@@ -16,10 +16,7 @@ struct test_job_1 : fjs::Job
 void main_test(fjs::Manager* mgr)
 {
 	test_job_1 test_job_1_inst;
-
-	fjs::Counter ctr(mgr);
-	mgr->ScheduleJob(fjs::JobPriority::High, fjs::JobInfo(&test_job_1_inst, "x", &ctr));
-	mgr->WaitForCounter(&ctr);
+	mgr->WaitForSingle(fjs::JobPriority::High, fjs::JobInfo(&test_job_1_inst, "x"));
 }
 
 int main()
