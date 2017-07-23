@@ -103,3 +103,31 @@ uint16_t fjs::Manager::FindFreeFiber()
 		// TODO: Add Debug Counter and error message
 	}
 }
+
+void fjs::Manager::CleanupPreviousFiber(TLS* tls)
+{
+	if (tls == nullptr)
+		tls = GetCurrentTLS();
+
+	switch (tls->PreviousFiberDestination)
+	{
+	case FiberDestination::None:
+		return;
+
+	case FiberDestination::Pool:
+		m_idleFibers[tls->PreviousFiberIndex].store(true, std::memory_order_release);
+		break;
+
+	case FiberDestination::Waiting:
+		tls->PreviousFiberStored->store(true, std::memory_order_relaxed);
+		break;
+
+	default:
+		break;
+	}
+
+	// Cleanup TLS
+	tls->PreviousFiberIndex = UINT16_MAX;
+	tls->PreviousFiberDestination = FiberDestination::None;
+	tls->PreviousFiberStored = nullptr;
+}

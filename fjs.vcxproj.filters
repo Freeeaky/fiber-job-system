@@ -29,6 +29,9 @@
     <ClInclude Include="include\fjs\Job.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="include\fjs\Counter.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Manager.cpp">
@@ -47,6 +50,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="src\ManagerJobs.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Counter.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

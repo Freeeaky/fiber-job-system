@@ -8,6 +8,7 @@ namespace fjs
 	class Thread;
 	struct TLS;
 	class Fiber;
+	class Counter;
 
 	struct ManagerOptions
 	{
@@ -29,6 +30,8 @@ namespace fjs
 
 	class Manager
 	{
+		friend class Counter;
+
 	public:
 		enum class ReturnCode : uint8_t
 		{
@@ -42,7 +45,7 @@ namespace fjs
 			InvalidNumFibers,		// Fiber count is 0 or too high
 		};
 
-		using Main_t = void(*)(fjs::Manager*);
+		using Main_t = void(*)(Manager*);
 
 	protected:
 		std::atomic_bool m_shuttingDown = false;
@@ -57,6 +60,7 @@ namespace fjs
 		std::atomic_bool* m_idleFibers = nullptr;
 
 		uint16_t FindFreeFiber();
+		void CleanupPreviousFiber(TLS* = nullptr);
 
 		// Thread
 		uint8_t GetCurrentThreadIndex() const;
@@ -69,7 +73,7 @@ namespace fjs
 		JobQueue m_lowPriorityQueue;
 
 		JobQueue* GetQueueByPriority(JobPriority);
-		bool GetNextJob(Job&);
+		bool GetNextJob(Job&, TLS*);
 
 	private:
 		Main_t m_mainCallback = nullptr;
@@ -91,6 +95,9 @@ namespace fjs
 
 		// Jobs
 		void ScheduleJob(JobPriority, const Job&);
+
+		// Counter
+		void WaitForCounter(Counter*, uint32_t = 0);
 
 		// Getter
 		inline bool IsShuttingDown() const { return m_shuttingDown.load(std::memory_order_acquire); };

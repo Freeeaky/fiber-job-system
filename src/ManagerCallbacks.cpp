@@ -1,6 +1,7 @@
 #include <fjs/Manager.h>
 #include <fjs/Thread.h>
 #include <fjs/Fiber.h>
+#include <fjs/Counter.h>
 
 void fjs::Manager::ThreadCallback_Worker(fjs::Thread* thread)
 {
@@ -34,6 +35,7 @@ void fjs::Manager::FiberCallback_Main(fjs::Fiber* fiber)
 void fjs::Manager::FiberCallback_Worker(fjs::Fiber* fiber)
 {
 	auto manager = reinterpret_cast<fjs::Manager*>(fiber->GetUserdata());
+	manager->CleanupPreviousFiber();
 
 	Job job;
 
@@ -41,8 +43,13 @@ void fjs::Manager::FiberCallback_Worker(fjs::Fiber* fiber)
 	{
 		auto tls = manager->GetCurrentTLS();
 		
-		if (manager->GetNextJob(job))
+		if (manager->GetNextJob(job, tls))
+		{
 			job.callback(job.userdata);
+			
+			if (job.counter)
+				job.counter->Decrement();
+		}
 
 		Thread::Sleep(1);
 	}

@@ -135,6 +135,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Fiber.cpp" />
+    <ClCompile Include="src\Counter.cpp" />
     <ClCompile Include="src\Manager.cpp" />
     <ClCompile Include="src\ManagerCallbacks.cpp" />
     <ClCompile Include="src\ManagerJobs.cpp" />
@@ -144,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="include\fjs\Fiber.h" />
     <ClInclude Include="include\fjs\Job.h" />
+    <ClInclude Include="include\fjs\Counter.h" />
     <ClInclude Include="include\fjs\Manager.h" />
     <ClInclude Include="include\fjs\Queue.h" />
     <ClInclude Include="include\fjs\Thread.h" />
