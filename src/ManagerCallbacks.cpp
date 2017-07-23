@@ -53,6 +53,8 @@ void fjs::Manager::FiberCallback_Worker(fjs::Fiber* fiber)
 			
 			if (job.counter)
 				job.counter->Decrement();
+
+			continue;
 		}
 
 		Thread::Sleep(1);

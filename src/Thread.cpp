@@ -1,3 +1,4 @@
+#include <fjs/Common.h>
 #include <fjs/Thread.h>
 #include <fjs/Fiber.h>
 #ifdef _WIN32
@@ -9,6 +10,10 @@ static void WINAPI LaunchThread(void* ptr)
 {
 	auto thread = reinterpret_cast<fjs::Thread*>(ptr);
 	auto callback = thread->GetCallback();
+
+	if (callback == nullptr)
+		throw fjs::Exception("LaunchThread: callback is nullptr");
+
 	callback(thread);
 }
 #endif

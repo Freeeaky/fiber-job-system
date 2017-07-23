@@ -25,8 +25,8 @@ namespace fjs
 		// Converts current Thread to a Fiber
 		void FromCurrentThread();
 
-		// Reset
-		void Reset(Callback_t);
+		// Set Callback
+		void SetCallback(Callback_t);
 
 		// Fiber Switching
 		void SwitchTo(Fiber*, void* = nullptr);

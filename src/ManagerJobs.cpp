@@ -1,3 +1,4 @@
+#include <fjs/Common.h>
 #include <fjs/Manager.h>
 #include <fjs/Counter.h>
 #include <fjs/TLS.h>
@@ -69,7 +70,7 @@ void fjs::Manager::ScheduleJob(JobPriority prio, const Job& job)
 			job.counter->Increment();
 
 		if (!queue->Enqueue(job))
-			throw; // Queue Full
+			throw fjs::Exception("Job Queue is full!");
 	}
 }
 

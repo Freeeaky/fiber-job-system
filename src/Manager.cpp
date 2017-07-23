@@ -14,7 +14,9 @@ fjs::Manager::Manager(const ManagerOptions& options) :
 
 fjs::Manager::~Manager()
 {
-	// TODO
+	delete[] m_threads;
+	delete[] m_fibers;
+	delete[] m_idleFibers;
 }
 
 fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
@@ -26,9 +28,11 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 	m_threads = new Thread[m_numThreads];
 
 	// Current (Main) Thread
-	m_threads[0].FromCurrentThread();
-
 	auto mainThread = &m_threads[0];
+	mainThread->FromCurrentThread();
+	if (m_threadAffinity)
+		mainThread->SetAffinity(1);
+
 	auto mainThreadTLS = mainThread->GetTLS();
 	mainThreadTLS->ThreadFiber.FromCurrentThread();
 
@@ -42,7 +46,7 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 
 	for (uint16_t i = 0; i < m_numFibers; i++)
 	{
-		m_fibers[i].Reset(FiberCallback_Worker);
+		m_fibers[i].SetCallback(FiberCallback_Worker);
 		m_idleFibers[i].store(true, std::memory_order_relaxed);
 	}
 
@@ -74,7 +78,7 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 	// Setup main Fiber
 	mainThreadTLS->CurrentFiberIndex = FindFreeFiber();
 	auto mainFiber = &m_fibers[mainThreadTLS->CurrentFiberIndex];
-	mainFiber->Reset(FiberCallback_Main);
+	mainFiber->SetCallback(FiberCallback_Main);
 
 	mainThreadTLS->ThreadFiber.SwitchTo(mainFiber, this);
 

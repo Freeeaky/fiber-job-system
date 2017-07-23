@@ -1,3 +1,4 @@
+#include <fjs/Common.h>
 #include <fjs/Counter.h>
 #include <fjs/Manager.h>
 #include <fjs/TLS.h>
@@ -66,7 +67,7 @@ bool fjs::Counter::AddWaitingFiber(uint16_t fiberIndex, Unit_t targetValue, std:
 	}
 
 	// Waiting Slots are full
-	throw;
+	throw fjs::Exception("Counter waiting slots are full!");
 }
 
 void fjs::Counter::CheckWaitingFibers(Unit_t value)
