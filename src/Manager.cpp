@@ -5,10 +5,15 @@
 
 fjs::Manager::Manager(uint8_t numThreads, uint16_t numFibers) :
 	m_numThreads(numThreads), m_numFibers(numFibers),
-	m_highPriorityQueue(16),
-	m_normalPriorityQueue(32),
-	m_lowPriorityQueue(32)
+	m_highPriorityQueue(512),
+	m_normalPriorityQueue(2048),
+	m_lowPriorityQueue(4096)
 {}
+
+fjs::Manager::~Manager()
+{
+	// TODO
+}
 
 fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 {
@@ -26,7 +31,7 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 
 	auto mainThread = &m_threads[0];
 	auto mainThreadTLS = mainThread->GetTLS();
-	mainThreadTLS->ThreadFiber = Fiber::ConvertCurrentThread();
+	mainThreadTLS->ThreadFiber.FromCurrentThread();
 
 	// Create Fibers
 	// This has to be done after Thread is converted to Fiber!
@@ -38,11 +43,11 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 		m_fibers[i].Reset(FiberCallback_Worker);
 
 	// Spawn Threads
-	for (uint8_t i = 1; i < m_numThreads; i++) // offset 1 because 0 is current thread
+	/*for (uint8_t i = 1; i < m_numThreads; i++) // offset 1 because 0 is current thread
 	{
 		if (!m_threads[i].Spawn(ThreadCallback_Worker))
 			return ReturnCode::OSError;
-	}
+	}*/
 
 	// Main
 	if (main == nullptr)
@@ -55,8 +60,14 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 	auto mainFiber = &m_fibers[mainThreadTLS->CurrentFiberIndex];
 	mainFiber->Reset(FiberCallback_Main);
 	
-	mainThreadTLS->ThreadFiber.SwitchTo(mainFiber);
+	mainThreadTLS->ThreadFiber.SwitchTo(mainFiber, this);
 	
 	// Done
 	return ReturnCode::Succes;
+}
+
+uint16_t fjs::Manager::FindFreeFiber()
+{
+	// TODO
+	return 0;
 }

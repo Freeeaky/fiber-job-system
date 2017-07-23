@@ -26,6 +26,21 @@ fjs::Fiber::~Fiber()
 #endif
 }
 
+void fjs::Fiber::FromCurrentThread()
+{
+#ifdef _WIN32
+	if (m_fiber)
+		DeleteFiber(m_fiber);
+
+	m_fiber = ConvertThreadToFiber(nullptr);
+#endif
+}
+
+void fjs::Fiber::Reset(Callback_t cb)
+{
+	m_callback = cb;
+}
+
 void fjs::Fiber::SwitchTo(fjs::Fiber* fiber, void* userdata)
 {
 	fiber->m_userdata = userdata;
@@ -36,12 +51,8 @@ void fjs::Fiber::SwitchTo(fjs::Fiber* fiber, void* userdata)
 
 void fjs::Fiber::SwitchBack()
 {
-	SwitchToFiber(m_return_fiber);
-}
-
-fjs::Fiber fjs::Fiber::ConvertCurrentThread()
-{
-#ifdef _WIN32
-	return Fiber(ConvertThreadToFiber(nullptr));
-#endif
+	if(m_return_fiber && m_return_fiber->m_fiber)
+		SwitchToFiber(m_return_fiber->m_fiber);
+	else
+		throw;
 }

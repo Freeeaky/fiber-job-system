@@ -22,16 +22,19 @@ namespace fjs
 		Fiber();
 		~Fiber();
 
+		// Converts current Thread to a Fiber
+		void FromCurrentThread();
+
+		// Reset
 		void Reset(Callback_t);
 
+		// Fiber Switching
 		void SwitchTo(Fiber*, void* = nullptr);
 		void SwitchBack();
 		
+		// Getter
 		inline Callback_t GetCallback() const { return m_callback; };
 		inline void* GetUserdata() const { return m_userdata; };
 		inline bool IsValid() const { return m_fiber && m_callback; };
-
-		// Converts current Thread to a Fiber
-		static Fiber ConvertCurrentThread();
 	};
 }

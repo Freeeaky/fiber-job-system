@@ -5,6 +5,11 @@ VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fjs", "fjs.vcxproj", "{8F57C8ED-2D18-4408-8DDE-02D8D662623A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "main-test", "test\main-test\main-test.vcxproj", "{742AA997-FD0D-422D-A841-13E4711EFB67}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8F57C8ED-2D18-4408-8DDE-02D8D662623A} = {8F57C8ED-2D18-4408-8DDE-02D8D662623A}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +26,14 @@ Global
 		{8F57C8ED-2D18-4408-8DDE-02D8D662623A}.Release|x64.Build.0 = Release|x64
 		{8F57C8ED-2D18-4408-8DDE-02D8D662623A}.Release|x86.ActiveCfg = Release|Win32
 		{8F57C8ED-2D18-4408-8DDE-02D8D662623A}.Release|x86.Build.0 = Release|Win32
+		{742AA997-FD0D-422D-A841-13E4711EFB67}.Debug|x64.ActiveCfg = Debug|x64
+		{742AA997-FD0D-422D-A841-13E4711EFB67}.Debug|x64.Build.0 = Debug|x64
+		{742AA997-FD0D-422D-A841-13E4711EFB67}.Debug|x86.ActiveCfg = Debug|Win32
+		{742AA997-FD0D-422D-A841-13E4711EFB67}.Debug|x86.Build.0 = Debug|Win32
+		{742AA997-FD0D-422D-A841-13E4711EFB67}.Release|x64.ActiveCfg = Release|x64
+		{742AA997-FD0D-422D-A841-13E4711EFB67}.Release|x64.Build.0 = Release|x64
+		{742AA997-FD0D-422D-A841-13E4711EFB67}.Release|x86.ActiveCfg = Release|Win32
+		{742AA997-FD0D-422D-A841-13E4711EFB67}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
