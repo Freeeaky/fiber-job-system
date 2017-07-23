@@ -75,7 +75,7 @@ namespace fjs
 		detail::JobQueue m_lowPriorityQueue;
 
 		detail::JobQueue* GetQueueByPriority(JobPriority);
-		bool GetNextJob(Job&, TLS*);
+		bool GetNextJob(JobInfo&, TLS*);
 
 	private:
 		Main_t m_mainCallback = nullptr;
@@ -96,7 +96,7 @@ namespace fjs
 		void Shutdown(bool blocking);
 
 		// Jobs
-		void ScheduleJob(JobPriority, const Job&);
+		void ScheduleJob(JobPriority, const JobInfo&);
 
 		// Counter
 		void WaitForCounter(Counter*, uint32_t = 0);

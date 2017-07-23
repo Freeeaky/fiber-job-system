@@ -21,7 +21,7 @@ fjs::detail::JobQueue* fjs::Manager::GetQueueByPriority(JobPriority prio)
 	}
 }
 
-bool fjs::Manager::GetNextJob(Job& job, TLS* tls)
+bool fjs::Manager::GetNextJob(JobInfo& job, TLS* tls)
 {
 	// High Priority Jobs always come first
 	if (m_highPriorityQueue.Dequeue(job))
@@ -61,13 +61,13 @@ bool fjs::Manager::GetNextJob(Job& job, TLS* tls)
 		m_lowPriorityQueue.Dequeue(job);
 }
 
-void fjs::Manager::ScheduleJob(JobPriority prio, const Job& job)
+void fjs::Manager::ScheduleJob(JobPriority prio, const JobInfo& job)
 {
 	auto queue = GetQueueByPriority(prio);
 	if (queue)
 	{
-		if (job.counter)
-			job.counter->Increment();
+		if (job.m_counter)
+			job.m_counter->Increment();
 
 		if (!queue->Enqueue(job))
 			throw fjs::Exception("Job Queue is full!");

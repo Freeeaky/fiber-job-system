@@ -5,24 +5,21 @@
 #include <iostream>
 #include <Windows.h>
 
-void test_job_1(void* ud)
+struct test_job_1 : fjs::Job
 {
-	std::cout << "test_job_1 " << (const char*)ud << std::endl;
-}
-
-fjs::Job job_low_prio(test_job_1, "low prio");
-fjs::Job job_normal_prio(test_job_1, "normal prio");
-fjs::Job job_high_prio(test_job_1, "high prio");
+	virtual void Execute(void* ud) override
+	{
+		std::cout << "test_job_1 " << (const char*)ud << std::endl;
+	}
+};
 
 void main_test(fjs::Manager* mgr)
 {
-	fjs::Queue list(mgr, fjs::JobPriority::High);
+	test_job_1 test_job_1_inst;
 
-	list += job_low_prio;
-	list += job_normal_prio;
-	list += job_high_prio;
-
-	list.Execute();
+	fjs::Counter ctr(mgr);
+	mgr->ScheduleJob(fjs::JobPriority::High, fjs::JobInfo(&test_job_1_inst, "x", &ctr));
+	mgr->WaitForCounter(&ctr);
 }
 
 int main()

@@ -19,8 +19,8 @@ namespace fjs
 		~List();
 
 		// Add
-		void Add(JobPriority, Job&);
-		List& operator+=(Job&);
+		void Add(JobPriority, JobInfo&);
+		List& operator+=(JobInfo&);
 
 		// Wait
 		void Wait(uint32_t targetValue = 0);

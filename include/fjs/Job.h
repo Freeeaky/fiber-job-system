@@ -5,24 +5,49 @@ namespace fjs
 {
 	class Counter;
 
-	class Job
+	struct Job
+	{
+		virtual ~Job() = default;
+		virtual void Execute(void*) = 0;
+	};
+
+	class JobInfo
 	{
 	public:
 		using Callback_t = void(*)(void*);
+		
+	private:
+		bool m_trivial = true;
+		union
+		{
+			Callback_t m_callback;
+			Job* m_job;
+		};
 
-		Job() = default;
-		Job(Callback_t cb, void* ud = nullptr, Counter* ctr = nullptr) :
-			callback(cb),
-			userdata(ud),
-			counter(ctr)
+	public:
+		void* m_userdata = nullptr;
+		Counter* m_counter = nullptr;
+
+	public:
+		JobInfo() = default;
+		JobInfo(Job* j, void* ud = nullptr, Counter* ctr = nullptr) :
+			m_trivial(false),
+			m_job(j),
+			m_userdata(ud),
+			m_counter(ctr)
 		{};
 
-		Job(const Job&) = default;
-		~Job() = default;
+		JobInfo(Callback_t cb, void* ud = nullptr, Counter* ctr = nullptr) :
+			m_trivial(true),
+			m_callback(cb),
+			m_userdata(ud),
+			m_counter(ctr)
+		{};
 
-		Callback_t callback = nullptr;
-		void* userdata = nullptr;
-		Counter* counter = nullptr;
+		~JobInfo() = default;
+
+		// Execute Job
+		void Execute();
 	};
 
 	enum class JobPriority : uint8_t
@@ -35,6 +60,6 @@ namespace fjs
 	namespace detail
 	{
 		// avoid confusion between fjs::Queue and fjs::JobQueue
-		using JobQueue = detail::MPMCQueue<Job>;
+		using JobQueue = detail::MPMCQueue<JobInfo>;
 	}
 }

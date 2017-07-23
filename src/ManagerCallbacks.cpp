@@ -41,7 +41,7 @@ void fjs::Manager::FiberCallback_Worker(fjs::Fiber* fiber)
 	auto manager = reinterpret_cast<fjs::Manager*>(fiber->GetUserdata());
 	manager->CleanupPreviousFiber();
 
-	Job job;
+	JobInfo job;
 
 	while (!manager->IsShuttingDown())
 	{
@@ -49,11 +49,7 @@ void fjs::Manager::FiberCallback_Worker(fjs::Fiber* fiber)
 		
 		if (manager->GetNextJob(job, tls))
 		{
-			job.callback(job.userdata);
-			
-			if (job.counter)
-				job.counter->Decrement();
-
+			job.Execute();
 			continue;
 		}
 

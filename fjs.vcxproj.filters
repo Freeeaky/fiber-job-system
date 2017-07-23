@@ -70,5 +70,8 @@
     <ClCompile Include="src\Queue.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="src\Job.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

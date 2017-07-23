@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="src\Fiber.cpp" />
     <ClCompile Include="src\Counter.cpp" />
+    <ClCompile Include="src\Job.cpp" />
     <ClCompile Include="src\List.cpp" />
     <ClCompile Include="src\Manager.cpp" />
     <ClCompile Include="src\ManagerCallbacks.cpp" />

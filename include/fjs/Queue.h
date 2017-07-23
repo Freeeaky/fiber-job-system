@@ -14,15 +14,15 @@ namespace fjs
 		JobPriority m_defaultPriority;
 
 		Counter m_counter;
-		std::vector<std::pair<JobPriority, Job>> m_queue;
+		std::vector<std::pair<JobPriority, JobInfo>> m_queue;
 
 	public:
 		Queue(Manager*, JobPriority defaultPriority = JobPriority::Normal);
 		~Queue();
 
 		// Add
-		void Add(JobPriority, Job&);
-		Queue& operator+=(Job&);
+		void Add(JobPriority, JobInfo&);
+		Queue& operator+=(JobInfo&);
 
 		// Execute all Jobs in Queue
 		void Execute();
