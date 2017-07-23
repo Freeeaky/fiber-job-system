@@ -25,12 +25,16 @@ namespace fjs
 		Counter* counter = nullptr;
 	};
 
-	using JobQueue = detail::MPMCQueue<Job>;
-
 	enum class JobPriority : uint8_t
 	{
 		High,
 		Normal,
 		Low
 	};
+
+	namespace detail
+	{
+		// avoid confusion between fjs::Queue and fjs::JobQueue
+		using JobQueue = detail::MPMCQueue<Job>;
+	}
 }

@@ -70,11 +70,11 @@ namespace fjs
 		TLS* GetCurrentTLS() const;
 
 		// Work Queue
-		JobQueue m_highPriorityQueue;
-		JobQueue m_normalPriorityQueue;
-		JobQueue m_lowPriorityQueue;
+		detail::JobQueue m_highPriorityQueue;
+		detail::JobQueue m_normalPriorityQueue;
+		detail::JobQueue m_lowPriorityQueue;
 
-		JobQueue* GetQueueByPriority(JobPriority);
+		detail::JobQueue* GetQueueByPriority(JobPriority);
 		bool GetNextJob(Job&, TLS*);
 
 	private:

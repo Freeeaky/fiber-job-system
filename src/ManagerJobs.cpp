@@ -3,7 +3,7 @@
 #include <fjs/Counter.h>
 #include <fjs/TLS.h>
 
-fjs::JobQueue* fjs::Manager::GetQueueByPriority(JobPriority prio)
+fjs::detail::JobQueue* fjs::Manager::GetQueueByPriority(JobPriority prio)
 {
 	switch (prio)
 	{
