@@ -1,5 +1,6 @@
 #include <fjs/Manager.h>
 #include <fjs/Counter.h>
+#include <fjs/List.h>
 #include <iostream>
 #include <Windows.h>
 
@@ -14,13 +15,12 @@ fjs::Job job_high_prio(test_job_1, "high prio");
 
 void main_test(fjs::Manager* mgr)
 {
-	fjs::Counter ctr(mgr);
-	job_high_prio.counter = &ctr;
+	fjs::List list(mgr, fjs::JobPriority::High);
 
 	for(int i = 0; i < 15; i++)
-		mgr->ScheduleJob(fjs::JobPriority::High, job_high_prio);
+		list += job_high_prio;
 
-	mgr->WaitForCounter(&ctr);
+	list.Wait();
 }
 
 int main()

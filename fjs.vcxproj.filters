@@ -23,13 +23,19 @@
     <ClInclude Include="include\fjs\Fiber.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="include\fjs\Queue.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="include\fjs\Job.h">
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="include\fjs\Counter.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fjs\Common.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fjs\detail_MPMCQueue.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fjs\List.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,6 +59,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="src\Counter.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\List.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,5 @@
 #pragma once
-#include "Queue.h"
+#include "detail_MPMCQueue.h"
 
 namespace fjs
 {
@@ -25,7 +25,7 @@ namespace fjs
 		Counter* counter = nullptr;
 	};
 
-	using JobQueue = Queue<Job>;
+	using JobQueue = detail::MPMCQueue<Job>;
 
 	enum class JobPriority : uint8_t
 	{
