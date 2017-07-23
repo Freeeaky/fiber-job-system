@@ -41,3 +41,10 @@ void fjs::Thread::FromCurrentThread()
 	m_handle = GetCurrentThread();
 	m_id = GetCurrentThreadId();
 }
+
+void fjs::Thread::Sleep(uint32_t ms)
+{
+#ifdef _WIN32
+	::Sleep(ms);
+#endif
+}

@@ -24,9 +24,10 @@ void fjs::Manager::FiberCallback_Main(fjs::Fiber* fiber)
 	// Main
 	manager->m_mainCallback(manager);
 
-	// TODO: Notify of quit
+	// Shutdown
+	manager->Shutdown(false);
 
-	// Switch back to Thread
+	// Switch back to Main Thread
 	fiber->SwitchBack();
 }
 
@@ -34,9 +35,12 @@ void fjs::Manager::FiberCallback_Worker(fjs::Fiber* fiber)
 {
 	auto manager = reinterpret_cast<fjs::Manager*>(fiber->GetUserdata());
 
-	while (true)
+	while (!manager->IsShuttingDown())
 	{
 		auto tls = manager->GetCurrentTLS();
+
+
+		Thread::Sleep(1);
 	}
 	
 	// Switch back to Thread

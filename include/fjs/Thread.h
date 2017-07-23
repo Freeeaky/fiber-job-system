@@ -45,5 +45,8 @@ namespace fjs
 		inline void* GetUserdata() const { return m_userdata; };
 		inline bool HasSpawned() const { return m_id != UINT32_MAX; };
 		inline const uint32_t GetID() const { return m_id; };
+
+		// Static Methods
+		static void Sleep(uint32_t ms);
 	};
 }

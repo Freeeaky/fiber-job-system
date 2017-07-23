@@ -4,8 +4,7 @@
 
 void main_test(fjs::Manager* mgr)
 {
-	while (true)
-		Sleep(1);
+	Sleep(1000);
 }
 
 int main()

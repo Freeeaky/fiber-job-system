@@ -67,11 +67,23 @@ fjs::Manager::ReturnCode fjs::Manager::Run(Main_t main)
 
 	mainThreadTLS->ThreadFiber.SwitchTo(mainFiber, this);
 
+	// Wait for all Threads to shut down
 	for (uint8_t i = 1; i < m_numThreads; i++)
 		m_threads[i].Join();
 	
 	// Done
 	return ReturnCode::Succes;
+}
+
+void fjs::Manager::Shutdown(bool blocking)
+{
+	m_shuttingDown.store(true, std::memory_order_release);
+
+	if (blocking)
+	{
+		for (uint8_t i = 1; i < m_numThreads; i++)
+			m_threads[i].Join();
+	}
 }
 
 uint16_t fjs::Manager::FindFreeFiber()

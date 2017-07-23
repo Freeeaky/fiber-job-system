@@ -27,6 +27,8 @@ namespace fjs
 		using Main_t = void(*)(fjs::Manager*);
 
 	protected:
+		std::atomic_bool m_shuttingDown = false;
+
 		// Threads
 		uint8_t m_numThreads;
 		Thread* m_threads = nullptr;
@@ -59,8 +61,14 @@ namespace fjs
 		Manager(uint8_t numThreads, uint16_t numFibers);
 		~Manager();
 
+		// Initialize & Run Manager
 		ReturnCode Run(Main_t);
 
+		// Shutdown all Jobs/Threads/Fibers
+		// blocking => wait for threads to exit
+		void Shutdown(bool blocking);
+
+		inline bool IsShuttingDown() const { return m_shuttingDown.load(std::memory_order_acquire); };
 		const uint8_t GetNumThreads() const { return m_numThreads; };
 		const uint16_t GetNumFibers() const { return m_numFibers; };
 	};
