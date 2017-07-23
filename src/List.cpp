@@ -10,16 +10,16 @@ fjs::List::List(fjs::Manager* mgr, JobPriority defaultPriority) :
 fjs::List::~List()
 {}
 
-void fjs::List::Add(Job& job)
+void fjs::List::Add(JobPriority prio, Job& job)
 {
 	job.counter = &m_counter;
 
-	m_manager->ScheduleJob(m_defaultPriority, job);
+	m_manager->ScheduleJob(prio, job);
 }
 
 fjs::List& fjs::List::operator+=(Job& job)
 {
-	Add(job);
+	Add(m_defaultPriority, job);
 	return *this;
 }
 

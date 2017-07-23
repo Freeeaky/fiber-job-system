@@ -141,6 +141,7 @@
     <ClCompile Include="src\ManagerCallbacks.cpp" />
     <ClCompile Include="src\ManagerJobs.cpp" />
     <ClCompile Include="src\ManagerThreads.cpp" />
+    <ClCompile Include="src\Queue.cpp" />
     <ClCompile Include="src\Thread.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +152,7 @@
     <ClInclude Include="include\fjs\List.h" />
     <ClInclude Include="include\fjs\Manager.h" />
     <ClInclude Include="include\fjs\detail_MPMCQueue.h" />
+    <ClInclude Include="include\fjs\Queue.h" />
     <ClInclude Include="include\fjs\Thread.h" />
     <ClInclude Include="include\fjs\TLS.h" />
   </ItemGroup>

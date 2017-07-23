@@ -19,7 +19,7 @@ namespace fjs
 		~List();
 
 		// Add
-		void Add(Job&);
+		void Add(JobPriority, Job&);
 		List& operator+=(Job&);
 
 		// Wait

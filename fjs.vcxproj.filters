@@ -38,6 +38,9 @@
     <ClInclude Include="include\fjs\List.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="include\fjs\Queue.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Manager.cpp">
@@ -62,6 +65,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="src\List.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Queue.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
