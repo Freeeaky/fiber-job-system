@@ -85,7 +85,7 @@ namespace fjs
 		static void FiberCallback_Main(fjs::Fiber*);
 
 	public:
-		Manager(const ManagerOptions&);
+		Manager(const ManagerOptions& = ManagerOptions());
 		~Manager();
 
 		// Initialize & Run Manager

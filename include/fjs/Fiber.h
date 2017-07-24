@@ -9,6 +9,8 @@ namespace fjs
 
 	private:
 		void* m_fiber = nullptr;
+		bool m_thread_fiber = false;
+
 		Fiber* m_return_fiber = nullptr;
 
 		Callback_t m_callback = nullptr;
@@ -20,6 +22,7 @@ namespace fjs
 
 	public:
 		Fiber();
+		Fiber(const Fiber&) = delete;
 		~Fiber();
 
 		// Converts current Thread to a Fiber

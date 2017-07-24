@@ -52,7 +52,7 @@ namespace fjs
 
 	enum class JobPriority : uint8_t
 	{
-		High,
+		High,		// Jobs are executed ASAP
 		Normal,
 		Low
 	};

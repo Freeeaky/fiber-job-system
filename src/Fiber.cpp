@@ -19,13 +19,14 @@ fjs::Fiber::Fiber()
 {
 #ifdef _WIN32
 	m_fiber = CreateFiber(0, (LPFIBER_START_ROUTINE)LaunchFiber, this);
+	m_thread_fiber = false;
 #endif
 }
 
 fjs::Fiber::~Fiber()
 {
 #ifdef _WIN32
-	if (m_fiber)
+	if (m_fiber && !m_thread_fiber)
 		DeleteFiber(m_fiber);
 #endif
 }
@@ -33,10 +34,11 @@ fjs::Fiber::~Fiber()
 void fjs::Fiber::FromCurrentThread()
 {
 #ifdef _WIN32
-	if (m_fiber)
+	if (m_fiber && !m_thread_fiber)
 		DeleteFiber(m_fiber);
 
 	m_fiber = ConvertThreadToFiber(nullptr);
+	m_thread_fiber = true;
 #endif
 }
 
