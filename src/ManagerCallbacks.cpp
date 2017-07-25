@@ -29,6 +29,17 @@ void fjs::Manager::FiberCallback_Main(fjs::Fiber* fiber)
 	// Main
 	manager->m_mainCallback(manager);
 
+	// Shutdown after Main
+	if (!manager->m_shutdownAfterMain)
+	{
+		// Switch to idle Fiber
+		auto tls = manager->GetCurrentTLS();
+		tls->CurrentFiberIndex = manager->FindFreeFiber();
+		
+		auto fiber = &manager->m_fibers[tls->CurrentFiberIndex];
+		tls->ThreadFiber.SwitchTo(fiber, manager);
+	}
+
 	// Shutdown
 	manager->Shutdown(false);
 

@@ -26,6 +26,9 @@ namespace fjs
 		size_t HighPriorityQueueSize   = 512;	// High Priority
 		size_t NormalPriorityQueueSize = 2048;	// Normal Priority
 		size_t LowPriorityQueueSize    = 4096;	// Low Priority
+
+		// Other
+		bool ShutdownAfterMainCallback = true;	// Shutdown everything after Main Callback returns?
 	};
 
 	class Manager
@@ -79,6 +82,7 @@ namespace fjs
 
 	private:
 		Main_t m_mainCallback = nullptr;
+		bool m_shutdownAfterMain = true;
 
 		static void ThreadCallback_Worker(fjs::Thread*);
 		static void FiberCallback_Worker(fjs::Fiber*);

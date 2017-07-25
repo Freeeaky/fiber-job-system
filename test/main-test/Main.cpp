@@ -30,6 +30,8 @@ int main()
 	managerOptions.NormalPriorityQueueSize = 256;
 	managerOptions.LowPriorityQueueSize = 256;
 
+	managerOptions.ShutdownAfterMainCallback = true;
+
 	// Manager
 	fjs::Manager manager(managerOptions);
 

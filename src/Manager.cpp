@@ -9,7 +9,8 @@ fjs::Manager::Manager(const ManagerOptions& options) :
 	m_numFibers(options.NumFibers),
 	m_highPriorityQueue(options.HighPriorityQueueSize),
 	m_normalPriorityQueue(options.NormalPriorityQueueSize),
-	m_lowPriorityQueue(options.LowPriorityQueueSize)
+	m_lowPriorityQueue(options.LowPriorityQueueSize),
+	m_shutdownAfterMain(options.ShutdownAfterMainCallback)
 {}
 
 fjs::Manager::~Manager()
