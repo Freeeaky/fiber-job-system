@@ -47,7 +47,8 @@ namespace fjs
 
 		// Callable class (Lambda / function with operator())
 		template <typename TCallable, typename... Args>
-		JobInfo(TCallable callable, Args... args)
+		JobInfo(Counter* ctr, TCallable callable, Args... args) :
+			m_counter(ctr)
 		{
 			Reset();
 			detail::function_checker<TCallable, Args...>::check();
@@ -57,7 +58,8 @@ namespace fjs
 
 		// Function
 		template <typename Ret, typename... Args>
-		JobInfo(Ret(*function)(Args...), Args... args)
+		JobInfo(Counter* ctr, Ret(*function)(Args...), Args... args) :
+			m_counter(ctr)
 		{
 			Reset();
 			detail::function_checker<decltype(function), Args...>::check();
@@ -67,7 +69,8 @@ namespace fjs
 
 		// Pointer to a callable class (operator())
 		template <class TCallable, typename... Args>
-		JobInfo(TCallable* callable, Args... args)
+		JobInfo(Counter* ctr, TCallable* callable, Args... args) :
+			m_counter(ctr)
 		{
 			Reset();
 
@@ -77,7 +80,8 @@ namespace fjs
 
 		// Member Function
 		template <class TClass, typename Ret, typename... Args>
-		JobInfo(Ret(TClass::* callable)(Args...), TClass* inst, Args... args)
+		JobInfo(Counter* ctr, Ret(TClass::* callable)(Args...), TClass* inst, Args... args) :
+			m_counter(ctr)
 		{
 			Reset();
 			detail::function_checker<decltype(callable), TClass*, Args...>::check();
@@ -85,29 +89,25 @@ namespace fjs
 			StoreJobInfo<typename detail::delegate_member<TClass, Ret, Args...>>(callable, inst, args...);
 		}
 
-		// Constructor with Counter
+		// Constructor without Counter
 		template <typename TCallable, typename... Args>
-		JobInfo(Counter* ctr, TCallable callable, Args... args) :
-			JobInfo(callable, args...),
-			m_counter(ctr)
+		JobInfo(TCallable callable, Args... args) :
+			JobInfo((Counter*)nullptr, callable, args...)
 		{};
 
 		template <typename Ret, typename... Args>
-		JobInfo(Counter* ctr, Ret(*function)(Args...), Args... args) :
-			JobInfo(function, args...),
-			m_counter(ctr)
+		JobInfo(Ret(*function)(Args...), Args... args) :
+			JobInfo((Counter*)nullptr, function, args...)
 		{};
 
 		template <class TCallable, typename... Args>
-		JobInfo(Counter* ctr, TCallable* callable, Args... args) :
-			JobInfo(callable, args...),
-			m_counter(ctr)
+		JobInfo(TCallable* callable, Args... args) :
+			JobInfo((Counter*)nullptr, callable, args...)
 		{};
 
 		template <class TClass, typename Ret, typename... Args>
-		JobInfo(Counter* ctr, Ret(TClass::* callable)(Args...), TClass* inst, Args... args) :
-			JobInfo(callable, inst, args...),
-			m_counter(ctr)
+		JobInfo(Ret(TClass::* callable)(Args...), TClass* inst, Args... args) :
+			JobInfo((Counter*)nullptr, callable, inst, args...)
 		{};
 
 		~JobInfo()

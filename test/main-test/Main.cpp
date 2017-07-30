@@ -45,6 +45,28 @@ void main_test(fjs::Manager* mgr)
 
 	// 3: Class operator()
 	mgr->WaitForSingle(fjs::JobPriority::Normal, &tj2_inst, &count);
+
+	// Counter
+	fjs::Counter counter(mgr);
+
+	// It's also possible to create a JobInfo yourself
+	// First argument can be a Counter
+	fjs::JobInfo test_job(&counter, test_job_1, &count);
+	mgr->ScheduleJob(fjs::JobPriority::Normal, test_job);
+	mgr->WaitForCounter(&counter);
+
+	// List / Queues
+	fjs::List list(mgr);
+	list.Add(fjs::JobPriority::Normal, test_job_1, &count);
+	list += test_job;
+
+	list.Wait();
+
+	fjs::Queue queue(mgr, fjs::JobPriority::High); // default Priority is high
+	queue.Add(test_job_1, &count);
+	queue += test_job;
+
+	queue.Execute();
 }
 
 int main()
