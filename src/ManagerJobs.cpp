@@ -66,8 +66,8 @@ void fjs::Manager::ScheduleJob(JobPriority prio, const JobInfo& job)
 	auto queue = GetQueueByPriority(prio);
 	if (queue)
 	{
-		if (job.m_counter)
-			job.m_counter->Increment();
+		if (job.GetCounter())
+			job.GetCounter()->Increment();
 
 		if (!queue->enqueue(job))
 			throw fjs::Exception("Job Queue is full!");
@@ -105,7 +105,7 @@ void fjs::Manager::WaitForCounter(Counter* counter, uint32_t targetValue)
 void fjs::Manager::WaitForSingle(JobPriority prio, JobInfo info)
 {
 	fjs::Counter ctr(this);
-	info.m_counter = &ctr;
+	info.SetCounter(&ctr);
 
 	ScheduleJob(prio, info);
 	WaitForCounter(&ctr);

@@ -12,7 +12,7 @@ fjs::List::~List()
 
 void fjs::List::Add(JobPriority prio, JobInfo job)
 {
-	job.m_counter = &m_counter;
+	job.SetCounter(&m_counter);
 
 	m_manager->ScheduleJob(prio, job);
 }

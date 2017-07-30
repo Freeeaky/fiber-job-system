@@ -5,76 +5,50 @@
 #include <iostream>
 #include <Windows.h>
 
-#include <fjs/detail/Delegate.h>
-
-struct test_job_1 : fjs::Job
+void test_job_1(int* x)
 {
-	virtual void Execute(void* ud) override
+	std::cout << "test_job_1 with " << *x << std::endl;
+	(*x)++;
+}
+
+struct test_job_2
+{
+	void Execute(int* x)
 	{
-		std::cout << "test_job_1 " << (const char*)ud << std::endl;
+		std::cout << "test_job_2::Execute with " << *x << std::endl;
+		(*x)++;
+	}
+
+	void operator()(int* x)
+	{
+		std::cout << "test_job_2::operator() with " << *x << std::endl;
+		(*x)++;
 	}
 };
 
 void main_test(fjs::Manager* mgr)
 {
-	test_job_1 test_job_1_inst;
-	mgr->WaitForSingle(fjs::JobPriority::High, fjs::JobInfo(&test_job_1_inst, "x"));
+	int count = 1;
+
+	// 1: Function
+	mgr->WaitForSingle(fjs::JobPriority::Normal, test_job_1, &count);
+
+	// 2: Lambda
+	mgr->WaitForSingle(fjs::JobPriority::Normal, [&count]() {
+		std::cout << "lambda with " << count << std::endl;
+		count++;
+	});
+
+	// 3: Member Function
+	test_job_2 tj2_inst;
+	mgr->WaitForSingle(fjs::JobPriority::Normal, &test_job_2::Execute, &tj2_inst, &count);
+
+	// 3: Class operator()
+	mgr->WaitForSingle(fjs::JobPriority::Normal, &tj2_inst, &count);
 }
-
-void test(int* x)
-{
-	std::cout << "test " << x << std::endl;
-}
-
-struct some_struct
-{
-	int a = 123;
-	int b = 234;
-	int c = 345;
-};
-
-struct non_trivial_struct
-{
-	non_trivial_struct() {};
-};
-
-class some_class
-{
-public:
-	void execute()
-	{
-		std::cout << "executing" << std::endl;
-	}
-
-	void operator()()
-	{
-
-	}
-};
 
 int main()
 {
-	using Delegate = fjs::detail::Delegate<64>;
-	static constexpr size_t x = sizeof(Delegate);
-	int result = 0;
-
-	Delegate dtest;
-	//dtest.Reset(dtest);
-	dtest.Reset(test, &result);
-	
-	int a = 0, b = 1, c = 2, d = 3, e = 4, f = 5;
-
-	auto lambda = [&a, b, c, d](int* r, int y) {
-		a = b;
-		*r = b + c + d * y; // 1 + 2 + 3
-	};
-
-	dtest.Reset(lambda, &result, 14);
-
-	some_class inst;
-	dtest.Reset(&some_class::execute, &inst);
-	dtest.Reset(&inst);
-
 	// Setup Job Manager
 	fjs::ManagerOptions managerOptions;
 	managerOptions.NumFibers = managerOptions.NumThreads * 10;

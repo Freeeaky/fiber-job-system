@@ -83,21 +83,30 @@ namespace fjs
 			}
 		};
 
-		// Function Checker
+		// Function Checker (seperated into different functions as template specialization errors could occur before checks are executed)
 		template <typename TCallable, typename... Args>
 		struct function_checker
 		{
+		private:
 			static constexpr void check_args()
 			{
 				using func_traits = function_traits<TCallable>;
-				argument_count_checker<func_traits::num_args, sizeof...(Args)>::check();
 				argument_checker<0, typename func_traits::args, typename std::tuple<Args...>>::check();
 			}
 
+			static constexpr void check_argcount()
+			{
+				using func_traits = function_traits<TCallable>;
+				argument_count_checker<func_traits::num_args, sizeof...(Args)>::check();
+
+				check_args();
+			}
+
+		public:
 			static constexpr void check()
 			{
 				callable_checker<TCallable>::check();
-				check_args();
+				check_argcount();
 			}
 		};
 

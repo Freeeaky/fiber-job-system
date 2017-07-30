@@ -53,7 +53,7 @@
     <ClInclude Include="include\fjs\detail\function_checks.h">
       <Filter>Header\detail</Filter>
     </ClInclude>
-    <ClInclude Include="include\fjs\detail\Delegate.h">
+    <ClInclude Include="include\fjs\detail\delegate.h">
       <Filter>Header\detail</Filter>
     </ClInclude>
   </ItemGroup>

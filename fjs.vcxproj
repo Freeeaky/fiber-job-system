@@ -147,7 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\fjs\Common.h" />
-    <ClInclude Include="include\fjs\detail\Delegate.h" />
+    <ClInclude Include="include\fjs\detail\delegate.h" />
     <ClInclude Include="include\fjs\detail\detail.h" />
     <ClInclude Include="include\fjs\detail\function_checks.h" />
     <ClInclude Include="include\fjs\detail\function_traits.h" />

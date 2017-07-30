@@ -110,5 +110,18 @@ namespace fjs
 		inline bool IsShuttingDown() const { return m_shuttingDown.load(std::memory_order_acquire); };
 		const uint8_t GetNumThreads() const { return m_numThreads; };
 		const uint16_t GetNumFibers() const { return m_numFibers; };
+
+		// Easy Scheduling
+		template <typename Callable, typename... Args>
+		inline void ScheduleJob(JobPriority prio, Callable callable, Args... args)
+		{
+			ScheduleJob(prio, JobInfo(callable, args...));
+		}
+
+		template <typename Callable, typename... Args>
+		inline void WaitForSingle(JobPriority prio, Callable callable,  Args... args)
+		{
+			WaitForSingle(prio, JobInfo(callable, args...));
+		}
 	};
 }

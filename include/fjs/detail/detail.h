@@ -35,7 +35,7 @@ namespace fjs
 		}
 
 		template <typename Function, typename... Args>
-		auto apply(Function func, std::tuple<Args...> args)
+		auto apply(Function func, std::tuple<Args...> args, typename std::enable_if<!std::is_member_function_pointer<Function>::value>::type* = 0)
 		{
 			using indices = to_index_tuple<Args...>;
 			return apply_impl(func, args, indices());
