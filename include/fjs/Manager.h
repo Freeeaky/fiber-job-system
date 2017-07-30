@@ -8,7 +8,9 @@ namespace fjs
 	class Thread;
 	struct TLS;
 	class Fiber;
+
 	class Counter;
+	namespace detail { class BaseCounter; };
 
 	struct ManagerOptions
 	{
@@ -33,7 +35,7 @@ namespace fjs
 
 	class Manager
 	{
-		friend class Counter;
+		friend class detail::BaseCounter;
 
 	public:
 		enum class ReturnCode : uint8_t
@@ -103,7 +105,7 @@ namespace fjs
 		void ScheduleJob(JobPriority, const JobInfo&);
 
 		// Counter
-		void WaitForCounter(Counter*, uint32_t = 0);
+		void WaitForCounter(detail::BaseCounter*, uint32_t = 0);
 		void WaitForSingle(JobPriority, JobInfo);
 
 		// Getter
@@ -119,13 +121,13 @@ namespace fjs
 		}
 
 		template <typename Callable, typename... Args>
-		inline void ScheduleJob(JobPriority prio, Counter* ctr, Callable callable, Args... args)
+		inline void ScheduleJob(JobPriority prio, detail::BaseCounter* ctr, Callable callable, Args... args)
 		{
 			ScheduleJob(prio, JobInfo(ctr, callable, args...));
 		}
 
 		template <typename Callable, typename... Args>
-		inline void WaitForSingle(JobPriority prio, Callable callable,  Args... args)
+		inline void WaitForSingle(JobPriority prio, Callable callable, Args... args)
 		{
 			WaitForSingle(prio, JobInfo(callable, args...));
 		}

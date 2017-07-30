@@ -74,7 +74,7 @@ void fjs::Manager::ScheduleJob(JobPriority prio, const JobInfo& job)
 	}
 }
 
-void fjs::Manager::WaitForCounter(Counter* counter, uint32_t targetValue)
+void fjs::Manager::WaitForCounter(detail::BaseCounter* counter, uint32_t targetValue)
 {
 	if (counter == nullptr || counter->GetValue() == targetValue)
 		return;
@@ -104,7 +104,7 @@ void fjs::Manager::WaitForCounter(Counter* counter, uint32_t targetValue)
 
 void fjs::Manager::WaitForSingle(JobPriority prio, JobInfo info)
 {
-	fjs::Counter ctr(this);
+	fjs::detail::TinyCounter ctr(this);
 	info.SetCounter(&ctr);
 
 	ScheduleJob(prio, info);

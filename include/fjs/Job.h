@@ -5,6 +5,7 @@
 namespace fjs
 {
 	class Counter;
+	namespace detail { class BaseCounter; };
 
 	class JobInfo
 	{
@@ -40,7 +41,7 @@ namespace fjs
 		}
 
 		// Counter
-		Counter* m_counter = nullptr;
+		detail::BaseCounter* m_counter = nullptr;
 
 	public:
 		JobInfo() = default;
@@ -116,12 +117,12 @@ namespace fjs
 		}
 
 		// Counter
-		inline void SetCounter(Counter* ctr)
+		inline void SetCounter(detail::BaseCounter* ctr)
 		{
 			m_counter = ctr;
 		}
 
-		inline Counter* GetCounter() const
+		inline detail::BaseCounter* GetCounter() const
 		{
 			return m_counter;
 		}
