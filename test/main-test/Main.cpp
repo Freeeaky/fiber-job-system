@@ -58,13 +58,13 @@ void main_test(fjs::Manager* mgr)
 	// List / Queues
 	fjs::List list(mgr);
 	list.Add(fjs::JobPriority::Normal, test_job_1, &count);
-	list += test_job;
+	//list += test_job; This would be unsafe, Jobs might execute in parallel
 
 	list.Wait();
 
 	fjs::Queue queue(mgr, fjs::JobPriority::High); // default Priority is high
 	queue.Add(test_job_1, &count);
-	queue += test_job;
+	queue += test_job; // Safe, Jobs are executed consecutively
 
 	queue.Execute();
 }
