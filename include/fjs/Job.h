@@ -1,6 +1,7 @@
 #pragma once
 #include "detail/mpmc_queue.h"
 #include "detail/delegate.h"
+#include "Counter.h"
 
 namespace fjs
 {
