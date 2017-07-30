@@ -9,6 +9,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Header\detail">
+      <UniqueIdentifier>{d6866c0b-1cd9-4bb9-8f40-ba814fdd5ad1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\fjs\TLS.h">
@@ -32,14 +35,26 @@
     <ClInclude Include="include\fjs\Common.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="include\fjs\detail_MPMCQueue.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="include\fjs\List.h">
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="include\fjs\Queue.h">
       <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fjs\detail\mpmc_queue.h">
+      <Filter>Header\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fjs\detail\function_traits.h">
+      <Filter>Header\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fjs\detail\detail.h">
+      <Filter>Header\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fjs\detail\function_checks.h">
+      <Filter>Header\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fjs\detail\Delegate.h">
+      <Filter>Header\detail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

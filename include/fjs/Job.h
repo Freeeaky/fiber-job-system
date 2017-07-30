@@ -1,5 +1,5 @@
 #pragma once
-#include "detail_MPMCQueue.h"
+#include "detail/mpmc_queue.h"
 
 namespace fjs
 {
@@ -60,6 +60,6 @@ namespace fjs
 	namespace detail
 	{
 		// avoid confusion between fjs::Queue and fjs::JobQueue
-		using JobQueue = detail::MPMCQueue<JobInfo>;
+		using JobQueue = detail::mpmc_queue<JobInfo>;
 	}
 }

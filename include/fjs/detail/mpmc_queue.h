@@ -11,10 +11,10 @@ namespace fjs
 		// http://www.1024cores.net/home/lock-free-algorithms/queues/bounded-mpmc-queue
 
 		template<typename T>
-		class MPMCQueue
+		class mpmc_queue
 		{
 		public:
-			MPMCQueue(size_t buffer_size)
+			mpmc_queue(size_t buffer_size)
 				: buffer_(new cell_t[buffer_size])
 				, buffer_mask_(buffer_size - 1)
 			{
@@ -25,12 +25,12 @@ namespace fjs
 				dequeue_pos_.store(0, std::memory_order_relaxed);
 			}
 
-			~MPMCQueue()
+			~mpmc_queue()
 			{
 				delete[] buffer_;
 			}
 
-			bool Enqueue(const T& data)
+			bool enqueue(const T& data)
 			{
 				cell_t* cell;
 				size_t pos = enqueue_pos_.load(std::memory_order_relaxed);
@@ -56,7 +56,7 @@ namespace fjs
 				return true;
 			}
 
-			bool Dequeue(T& data)
+			bool dequeue(T& data)
 			{
 				cell_t* cell;
 				size_t pos = dequeue_pos_.load(std::memory_order_relaxed);
@@ -101,9 +101,6 @@ namespace fjs
 			cacheline_pad_t         pad2_;
 			std::atomic<size_t>     dequeue_pos_;
 			cacheline_pad_t         pad3_;
-
-			//MPMCQueue(MPMCQueue const&);
-			//void operator = (MPMCQueue const&);
 		};
 	}
 }

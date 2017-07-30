@@ -24,7 +24,7 @@ fjs::detail::JobQueue* fjs::Manager::GetQueueByPriority(JobPriority prio)
 bool fjs::Manager::GetNextJob(JobInfo& job, TLS* tls)
 {
 	// High Priority Jobs always come first
-	if (m_highPriorityQueue.Dequeue(job))
+	if (m_highPriorityQueue.dequeue(job))
 		return true;
 
 	// Ready Fibers
@@ -57,8 +57,8 @@ bool fjs::Manager::GetNextJob(JobInfo& job, TLS* tls)
 
 	// Normal & Low Priority Jobs
 	return
-		m_normalPriorityQueue.Dequeue(job) ||
-		m_lowPriorityQueue.Dequeue(job);
+		m_normalPriorityQueue.dequeue(job) ||
+		m_lowPriorityQueue.dequeue(job);
 }
 
 void fjs::Manager::ScheduleJob(JobPriority prio, const JobInfo& job)
@@ -69,7 +69,7 @@ void fjs::Manager::ScheduleJob(JobPriority prio, const JobInfo& job)
 		if (job.m_counter)
 			job.m_counter->Increment();
 
-		if (!queue->Enqueue(job))
+		if (!queue->enqueue(job))
 			throw fjs::Exception("Job Queue is full!");
 	}
 }

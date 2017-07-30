@@ -147,12 +147,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\fjs\Common.h" />
+    <ClInclude Include="include\fjs\detail\Delegate.h" />
+    <ClInclude Include="include\fjs\detail\detail.h" />
+    <ClInclude Include="include\fjs\detail\function_checks.h" />
+    <ClInclude Include="include\fjs\detail\function_traits.h" />
+    <ClInclude Include="include\fjs\detail\mpmc_queue.h" />
     <ClInclude Include="include\fjs\Fiber.h" />
     <ClInclude Include="include\fjs\Job.h" />
     <ClInclude Include="include\fjs\Counter.h" />
     <ClInclude Include="include\fjs\List.h" />
     <ClInclude Include="include\fjs\Manager.h" />
-    <ClInclude Include="include\fjs\detail_MPMCQueue.h" />
     <ClInclude Include="include\fjs\Queue.h" />
     <ClInclude Include="include\fjs\Thread.h" />
     <ClInclude Include="include\fjs\TLS.h" />
