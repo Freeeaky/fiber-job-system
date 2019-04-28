@@ -1,4 +1,4 @@
-#include <fjs/Common.h>
+#include <fjs/Exception.h>
 #include <fjs/Thread.h>
 #include <fjs/Fiber.h>
 #ifdef _WIN32
@@ -11,8 +11,9 @@ static void WINAPI LaunchThread(void* ptr)
 	auto thread = reinterpret_cast<fjs::Thread*>(ptr);
 	auto callback = thread->GetCallback();
 
-	if (callback == nullptr)
+	if (callback == nullptr) {
 		throw fjs::Exception("LaunchThread: callback is nullptr");
+	}
 
 	callback(thread);
 }
@@ -34,8 +35,9 @@ bool fjs::Thread::Spawn(Callback_t callback, void* userdata)
 void fjs::Thread::SetAffinity(size_t i)
 {
 #ifdef _WIN32
-	if (!HasSpawned())
+	if (!HasSpawned()) {
 		return;
+	}
 
 	DWORD_PTR mask = 1ull << i;
 	SetThreadAffinityMask(m_handle, mask);
@@ -44,8 +46,9 @@ void fjs::Thread::SetAffinity(size_t i)
 
 void fjs::Thread::Join()
 {
-	if (!HasSpawned())
+	if (!HasSpawned()) {
 		return;
+	}
 
 #ifdef _WIN32
 	WaitForSingleObject(m_handle, INFINITE);
@@ -58,9 +61,9 @@ void fjs::Thread::FromCurrentThread()
 	m_id = GetCurrentThreadId();
 }
 
-void fjs::Thread::Sleep(uint32_t ms)
+void fjs::Thread::SleepFor(uint32_t ms)
 {
 #ifdef _WIN32
-	::Sleep(ms);
+	Sleep(ms);
 #endif
 }

@@ -3,9 +3,11 @@
 
 void fjs::JobInfo::Execute()
 {
-	if (!IsNull())
+	if (!IsNull()) {
 		GetDelegate()->Call();
+	}
 
-	if (m_counter)
+	if (m_counter) {
 		m_counter->Decrement();
+	}
 }

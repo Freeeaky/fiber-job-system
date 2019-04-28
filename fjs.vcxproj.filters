@@ -32,9 +32,6 @@
     <ClInclude Include="include\fjs\Counter.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="include\fjs\Common.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="include\fjs\List.h">
       <Filter>Header</Filter>
     </ClInclude>
@@ -55,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="include\fjs\detail\delegate.h">
       <Filter>Header\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fjs\Exception.h">
+      <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-#include <fjs/Common.h>
+#include <fjs/Exception.h>
 #include <fjs/Counter.h>
 #include <fjs/Manager.h>
 #include <fjs/TLS.h>
@@ -9,8 +9,9 @@ fjs::detail::BaseCounter::BaseCounter(Manager* mgr, uint8_t numWaitingFibers, Wa
 	m_waitingFibers(waitingFibers),
 	m_freeWaitingSlots(freeWaitingSlots)
 {
-	for (uint8_t i = 0; i < m_numWaitingFibers; i++)
+	for (uint8_t i = 0; i < m_numWaitingFibers; i++) {
 		m_freeWaitingSlots[i].store(true);
+	}
 }
 
 fjs::Counter::Counter(Manager* mgr) :
@@ -44,12 +45,12 @@ fjs::Counter::Unit_t fjs::detail::BaseCounter::GetValue() const
 
 bool fjs::detail::BaseCounter::AddWaitingFiber(uint16_t fiberIndex, Unit_t targetValue, std::atomic_bool* fiberStored)
 {
-	for (uint8_t i = 0; i < m_numWaitingFibers; i++)
-	{
+	for (uint8_t i = 0; i < m_numWaitingFibers; i++) {
 		// Acquire Free Waiting Slot
 		bool expected = true;
-		if (!std::atomic_compare_exchange_strong_explicit(&m_freeWaitingSlots[i], &expected, false, std::memory_order_seq_cst, std::memory_order_relaxed))
+		if (!std::atomic_compare_exchange_strong_explicit(&m_freeWaitingSlots[i], &expected, false, std::memory_order_seq_cst, std::memory_order_relaxed)) {
 			continue;
+		}
 
 		// Setup Slot
 		auto slot = &m_waitingFibers[i];
@@ -61,14 +62,15 @@ bool fjs::detail::BaseCounter::AddWaitingFiber(uint16_t fiberIndex, Unit_t targe
 
 		// Check if we are done already
 		Unit_t counter = m_counter.load(std::memory_order_relaxed);
-		if (slot->InUse.load(std::memory_order_acquire))
+		if (slot->InUse.load(std::memory_order_acquire)) {
 			return false;
+		}
 
-		if (slot->TargetValue == counter)
-		{
+		if (slot->TargetValue == counter) {
 			expected = false;
-			if (!std::atomic_compare_exchange_strong_explicit(&slot->InUse, &expected, true, std::memory_order_seq_cst, std::memory_order_relaxed))
+			if (!std::atomic_compare_exchange_strong_explicit(&slot->InUse, &expected, true, std::memory_order_seq_cst, std::memory_order_relaxed)) {
 				return false;
+			}
 
 			m_freeWaitingSlots[i].store(true, std::memory_order_release);
 			return true;
@@ -83,21 +85,21 @@ bool fjs::detail::BaseCounter::AddWaitingFiber(uint16_t fiberIndex, Unit_t targe
 
 void fjs::detail::BaseCounter::CheckWaitingFibers(Unit_t value)
 {
-	for (size_t i = 0; i < m_numWaitingFibers; i++)
-	{
-		if (m_freeWaitingSlots[i].load(std::memory_order_acquire))
+	for (size_t i = 0; i < m_numWaitingFibers; i++) {
+		if (m_freeWaitingSlots[i].load(std::memory_order_acquire)) {
 			continue;
+		}
 
 		auto waitingSlot = &m_waitingFibers[i];
-
-		if (waitingSlot->InUse.load(std::memory_order_acquire))
+		if (waitingSlot->InUse.load(std::memory_order_acquire)) {
 			continue;
+		}
 
-		if (waitingSlot->TargetValue == value)
-		{
+		if (waitingSlot->TargetValue == value) {
 			bool expected = false;
-			if (!std::atomic_compare_exchange_strong_explicit(&waitingSlot->InUse, &expected, true, std::memory_order_seq_cst, std::memory_order_relaxed))
+			if (!std::atomic_compare_exchange_strong_explicit(&waitingSlot->InUse, &expected, true, std::memory_order_seq_cst, std::memory_order_relaxed)) {
 				continue;
+			}
 
 			m_manager->GetCurrentTLS()->ReadyFibers.emplace_back(waitingSlot->FiberIndex, waitingSlot->FiberStored);
 			m_freeWaitingSlots[i].store(true, std::memory_order_release);

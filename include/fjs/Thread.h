@@ -48,6 +48,6 @@ namespace fjs
 		inline const uint32_t GetID() const { return m_id; };
 
 		// Static Methods
-		static void Sleep(uint32_t ms);
+		static void SleepFor(uint32_t ms);
 	};
 }

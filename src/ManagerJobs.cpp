@@ -1,4 +1,4 @@
-#include <fjs/Common.h>
+#include <fjs/Exception.h>
 #include <fjs/Manager.h>
 #include <fjs/Counter.h>
 #include <fjs/TLS.h>
@@ -24,12 +24,14 @@ fjs::detail::JobQueue* fjs::Manager::GetQueueByPriority(JobPriority prio)
 bool fjs::Manager::GetNextJob(JobInfo& job, TLS* tls)
 {
 	// High Priority Jobs always come first
-	if (m_highPriorityQueue.dequeue(job))
+	if (m_highPriorityQueue.dequeue(job)) {
 		return true;
+	}
 
 	// Ready Fibers
-	if (tls == nullptr)
+	if (tls == nullptr) {
 		tls = GetCurrentTLS();
+	}
 
 	for (auto it = tls->ReadyFibers.begin(); it != tls->ReadyFibers.end(); ++it)
 	{
@@ -64,26 +66,29 @@ bool fjs::Manager::GetNextJob(JobInfo& job, TLS* tls)
 void fjs::Manager::ScheduleJob(JobPriority prio, const JobInfo& job)
 {
 	auto queue = GetQueueByPriority(prio);
-	if (queue)
-	{
-		if (job.GetCounter())
-			job.GetCounter()->Increment();
+	if (!queue) {
+		return;
+	}
 
-		if (!queue->enqueue(job))
-			throw fjs::Exception("Job Queue is full!");
+	if (job.GetCounter()) {
+		job.GetCounter()->Increment();
+	}
+
+	if (!queue->enqueue(job)) {
+		throw fjs::Exception("Job Queue is full!");
 	}
 }
 
 void fjs::Manager::WaitForCounter(detail::BaseCounter* counter, uint32_t targetValue)
 {
-	if (counter == nullptr || counter->GetValue() == targetValue)
+	if (counter == nullptr || counter->GetValue() == targetValue) {
 		return;
+	}
 
 	auto tls = GetCurrentTLS();
 	auto fiberStored = new std::atomic_bool(false);
 
-	if (counter->AddWaitingFiber(tls->CurrentFiberIndex, targetValue, fiberStored))
-	{
+	if (counter->AddWaitingFiber(tls->CurrentFiberIndex, targetValue, fiberStored)) {
 		// Already done
 		delete fiberStored;
 		return;

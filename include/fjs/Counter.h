@@ -61,7 +61,8 @@ namespace fjs
 		};
 	}
 
-	class Counter : public detail::BaseCounter
+	class Counter :
+		public detail::BaseCounter
 	{
 	public:
 		static const constexpr uint8_t MAX_WAITING = 4;

@@ -2,16 +2,18 @@
 #include <fjs/Thread.h>
 #ifdef _WIN32
 #include <Windows.h>
+#else
+#error Linux is not supported!
 #endif
 
 uint8_t fjs::Manager::GetCurrentThreadIndex() const
 {
 #ifdef _WIN32
 	uint32_t idx = GetCurrentThreadId();
-	for (uint8_t i = 0; i < m_numThreads; i++)
-	{
-		if (m_threads[i].GetID() == idx)
+	for (uint8_t i = 0; i < m_numThreads; i++) {
+		if (m_threads[i].GetID() == idx) {
 			return i;
+		}
 	}
 #endif
 
@@ -22,10 +24,10 @@ fjs::Thread* fjs::Manager::GetCurrentThread() const
 {
 #ifdef _WIN32
 	uint32_t idx = GetCurrentThreadId();
-	for (uint8_t i = 0; i < m_numThreads; i++)
-	{
-		if (m_threads[i].GetID() == idx)
+	for (uint8_t i = 0; i < m_numThreads; i++) {
+		if (m_threads[i].GetID() == idx) {
 			return &m_threads[i];
+		}
 	}
 #endif
 
@@ -36,10 +38,10 @@ fjs::TLS* fjs::Manager::GetCurrentTLS() const
 {
 #ifdef _WIN32
 	uint32_t idx = GetCurrentThreadId();
-	for (uint8_t i = 0; i < m_numThreads; i++)
-	{
-		if (m_threads[i].GetID() == idx)
+	for (uint8_t i = 0; i < m_numThreads; i++) {
+		if (m_threads[i].GetID() == idx) {
 			return m_threads[i].GetTLS();
+		}
 	}
 #endif
 

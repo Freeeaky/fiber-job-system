@@ -24,8 +24,9 @@ fjs::Queue& fjs::Queue::operator+=(const JobInfo& job)
 
 bool fjs::Queue::Step()
 {
-	if (m_queue.empty())
+	if (m_queue.empty()) {
 		return false;
+	}
 
 	const auto& job = m_queue.front();
 	m_manager->ScheduleJob(job.first, job.second);

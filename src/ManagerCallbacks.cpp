@@ -30,8 +30,7 @@ void fjs::Manager::FiberCallback_Main(fjs::Fiber* fiber)
 	manager->m_mainCallback(manager);
 
 	// Shutdown after Main
-	if (!manager->m_shutdownAfterMain)
-	{
+	if (!manager->m_shutdownAfterMain) {
 		// Switch to idle Fiber
 		auto tls = manager->GetCurrentTLS();
 		tls->CurrentFiberIndex = manager->FindFreeFiber();
@@ -54,17 +53,15 @@ void fjs::Manager::FiberCallback_Worker(fjs::Fiber* fiber)
 
 	JobInfo job;
 
-	while (!manager->IsShuttingDown())
-	{
+	while (!manager->IsShuttingDown()) {
 		auto tls = manager->GetCurrentTLS();
 		
-		if (manager->GetNextJob(job, tls))
-		{
+		if (manager->GetNextJob(job, tls)) {
 			job.Execute();
 			continue;
 		}
 
-		Thread::Sleep(1);
+		Thread::SleepFor(1);
 	}
 	
 	// Switch back to Thread
