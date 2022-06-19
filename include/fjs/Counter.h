@@ -32,6 +32,8 @@ namespace fjs
 			WaitingFibers* m_waitingFibers;
 			std::atomic_bool* m_freeWaitingSlots;
 
+			void InitWaitingFibers();
+
 			// Manager
 			Manager* m_manager;
 

@@ -9,18 +9,26 @@ fjs::detail::BaseCounter::BaseCounter(Manager* mgr, uint8_t numWaitingFibers, Wa
 	m_waitingFibers(waitingFibers),
 	m_freeWaitingSlots(freeWaitingSlots)
 {
-	for (uint8_t i = 0; i < m_numWaitingFibers; i++) {
-		m_freeWaitingSlots[i].store(true);
-	}
 }
 
 fjs::Counter::Counter(Manager* mgr) :
 	BaseCounter(mgr, MAX_WAITING, m_impl_waitingFibers, m_impl_freeWaitingSlots)
-{}
+{
+	InitWaitingFibers();
+}
 
 fjs::detail::TinyCounter::TinyCounter(Manager* mgr) :
 	BaseCounter(mgr, 1, &m_waitingFiber, &m_freeWaitingSlot)
-{}
+{
+	InitWaitingFibers();
+}
+
+void fjs::detail::BaseCounter::InitWaitingFibers()
+{
+	for (uint8_t i = 0; i < m_numWaitingFibers; i++) {
+		m_freeWaitingSlots[i].store(true);
+	}
+}
 
 fjs::Counter::Unit_t fjs::detail::BaseCounter::Increment(Unit_t by)
 {
