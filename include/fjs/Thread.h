@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include "TLS.h"
+#include <condition_variable>
 
 namespace fjs
 {
@@ -16,6 +17,7 @@ namespace fjs
 		uint32_t m_id = UINT32_MAX;
 		TLS m_tls;
 
+		std::condition_variable _cvReceivedId;
 		Callback_t m_callback = nullptr;
 		void* m_userdata = nullptr;
 
@@ -46,6 +48,15 @@ namespace fjs
 		inline void* GetUserdata() const { return m_userdata; };
 		inline bool HasSpawned() const { return m_id != UINT32_MAX; };
 		inline const uint32_t GetID() const { return m_id; };
+
+		// Thread may launch before an ID was assigned (especially in Win32)
+		// MSDN: If the thread is created in a runnable state (that is, if the
+		//		 CREATE_SUSPENDED flag is not used), the thread can start running
+		//		 before CreateThread returns and, in particular, before the caller
+		//		 receives the handle and identifier of the created thread.
+		// This scenario can cause a crash when the resulting callback wants to
+		// access TLS.
+		void WaitForReady();
 
 		// Static Methods
 		static void SleepFor(uint32_t ms);

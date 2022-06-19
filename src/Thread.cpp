@@ -15,15 +15,18 @@ static void WINAPI LaunchThread(void* ptr)
 		throw fjs::Exception("LaunchThread: callback is nullptr");
 	}
 
+	thread->WaitForReady();
 	callback(thread);
 }
 #endif
 
 bool fjs::Thread::Spawn(Callback_t callback, void* userdata)
 {
-	m_handle = nullptr; m_id = UINT32_MAX;
+	m_handle = nullptr;
+	m_id = UINT32_MAX;
 	m_callback = callback;
 	m_userdata = userdata;
+	_cvReceivedId.notify_all();
 
 #ifdef _WIN32
 	m_handle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)LaunchThread, this, 0, (DWORD*) &m_id);
@@ -59,6 +62,14 @@ void fjs::Thread::FromCurrentThread()
 {
 	m_handle = GetCurrentThread();
 	m_id = GetCurrentThreadId();
+}
+
+void fjs::Thread::WaitForReady()
+{
+	std::mutex mutex;
+
+	std::unique_lock<std::mutex> lock(mutex);
+	_cvReceivedId.wait(lock);
 }
 
 void fjs::Thread::SleepFor(uint32_t ms)
