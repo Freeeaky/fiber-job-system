@@ -26,10 +26,13 @@ bool fjs::Thread::Spawn(Callback_t callback, void* userdata)
 	m_id = UINT32_MAX;
 	m_callback = callback;
 	m_userdata = userdata;
-	_cvReceivedId.notify_all();
+	m_cvReceivedId.notify_all();
 
 #ifdef _WIN32
-	m_handle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)LaunchThread, this, 0, (DWORD*) &m_id);
+	{
+		std::lock_guard<std::mutex> lock(m_startupIdMutex);
+		m_handle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)LaunchThread, this, 0, (DWORD*)&m_id);
+	}
 #endif
 
 	return HasSpawned();
@@ -66,10 +69,19 @@ void fjs::Thread::FromCurrentThread()
 
 void fjs::Thread::WaitForReady()
 {
+	// Check if we have an ID already
+	{
+		std::lock_guard<std::mutex> lock(m_startupIdMutex);
+		if (m_id != UINT32_MAX) {
+			return;
+		}
+	}
+
+	// Wait
 	std::mutex mutex;
 
 	std::unique_lock<std::mutex> lock(mutex);
-	_cvReceivedId.wait(lock);
+	m_cvReceivedId.wait(lock);
 }
 
 void fjs::Thread::SleepFor(uint32_t ms)

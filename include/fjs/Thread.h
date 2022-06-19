@@ -1,6 +1,8 @@
 #pragma once
 #include <stdint.h>
 #include "TLS.h"
+
+#include <mutex>
 #include <condition_variable>
 
 namespace fjs
@@ -17,7 +19,9 @@ namespace fjs
 		uint32_t m_id = UINT32_MAX;
 		TLS m_tls;
 
-		std::condition_variable _cvReceivedId;
+		std::condition_variable m_cvReceivedId;
+		std::mutex m_startupIdMutex;
+
 		Callback_t m_callback = nullptr;
 		void* m_userdata = nullptr;
 
